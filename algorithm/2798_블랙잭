@@ -1,0 +1,55 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <string>
+#include <cstring>
+using namespace std;
+
+int main(void)
+{
+	long long int n, m; //n : 카드의 개수, m : 합의 최댓값
+	cin >> n >> m;
+	if ((n < 3 || n > 100) || (m < 10 || m > 300000))
+	{
+		cout << "잘못된 수입니다." << endl;
+		return 0;
+	}
+	
+	long long int* arr = new long long int[n];
+	int count = 0;
+	
+	cin.ignore(); //앞서 cin에서 엔터에 남은 버퍼 제거
+	string str;
+	getline(cin, str);
+
+	//입력받은 각 정수값들을 int형 배열에 저장
+	char* str_buff = new char[2 * n]; 
+	strcpy(str_buff, str.c_str());
+
+	char* tok = strtok(str_buff, " ");
+	while (tok != nullptr)
+	{
+		arr[count++] = atoi(tok);
+		tok = strtok(nullptr, " ");
+	}
+
+	long long int best = 0; //최대 합을 저장할 변수
+	//n개의 수 중 3개를 골라 합을 더하는 모든 경우의 수
+	for (int i = 0; i < n-2; i++)
+	{
+		for (int j = i + 1; j < n - 1; j++)
+		{
+			for (int k = j + 1; k < n; k++)
+			{
+				int sum = arr[i] + arr[j] + arr[k];
+				//세 수의 합이 이전 최대 합보다 크고, 그 합이 m 이하이면 best에 sum의 값을 저장
+				if ((best < sum) && (sum <= m))
+					best = sum;
+			}
+		}
+	}
+	cout << best << endl;
+
+	delete[] str_buff;
+	delete[] arr;
+	return 0;
+}
