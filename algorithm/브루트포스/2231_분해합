@@ -1,0 +1,29 @@
+#include <iostream>
+using namespace std;
+
+int main(void)
+{
+	long long int n, m, sum; //n : 분해합, m : 생성자, sum : 연산 결과
+	cin >> n;
+
+	//n = m + 'm의 각자리 숫자의 합'
+	for (int i = 1; i < n; ++i)
+	{
+		sum = i;
+		m = i;
+
+		while (m)
+		{
+			sum += m % 10;
+			m /= 10;
+		}
+		if (n == sum)
+		{
+			cout << i << endl;
+			return 0;
+		}
+	}
+	cout << "0" << endl;
+	
+	return 0;
+}
