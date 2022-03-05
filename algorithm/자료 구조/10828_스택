@@ -8,10 +8,10 @@ class stack
 {
 private:
 	int Top;
-	int* Stack;
+	int Stack[100000];
 public:
-	stack() { Top = 0; Stack = new int[50]; }
-	~stack() { delete Stack; }
+	stack() { Top = 0; }
+	~stack() { }
 
 	void push(int X);
 	void pop();
