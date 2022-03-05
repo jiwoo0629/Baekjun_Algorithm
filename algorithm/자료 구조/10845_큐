@@ -1,0 +1,132 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <string>
+#include <cstring>
+using namespace std;
+
+class node
+{
+private:
+	int num;
+	node* next;
+public:
+	node() { num = 0; next = NULL; }
+	~node() { }
+	int getnum() { return num; }
+	node* getnext() { return next; }
+	void setnum(int n) { num = n; }
+	void setnext(node* n) { next = n; }
+};
+
+class queue
+{
+private:
+	int Size;
+	node* head, * tail;
+public:
+	queue() { Size = 0; head = NULL; tail = NULL; }
+	~queue() { }
+
+	void push(int X);
+	void pop();
+	void addsize() { Size++; }
+	void subsize() { Size--; }
+	void size();
+	void empty();
+	void front();
+	void back();
+};
+
+void queue::push(int X)
+{
+	node* newnode = new node();
+	newnode->setnum(X);
+	if (head == NULL)
+		head = tail = newnode;
+	else
+	{
+		tail->setnext(newnode);
+		tail = tail->getnext();
+	}
+	addsize();
+}
+
+void queue::pop()
+{
+	if (head == NULL)
+	{
+		cout << "-1" << endl;
+		return;
+	}
+	cout << head->getnum() << endl;
+	node* delnode = head;
+	head = head->getnext();
+	delete delnode;
+	subsize();
+}
+
+void queue::size()
+{
+	cout << Size << endl;
+}
+
+void queue::empty()
+{
+	if (Size == 0)
+		cout << "1" << endl;
+	else
+		cout << "0" << endl;
+}
+
+void queue::front()
+{
+	if (Size == 0)
+		cout << "-1" << endl;
+	else
+		cout << head->getnum() << endl;
+}
+
+void queue::back()
+{
+	if (Size == 0)
+		cout << "-1" << endl;
+	else
+		cout << tail->getnum() << endl;
+}
+
+int main(void)
+{
+	queue Q;
+
+	int N;
+	cin >> N;
+	cin.ignore();
+
+	for (int i = 0; i < N; i++)
+	{
+		string cmd;
+		getline(cin, cmd);
+		char* cmd_char = new char[cmd.size()];
+		strcpy(cmd_char, cmd.c_str());
+		char* tok = strtok(cmd_char, " ");
+
+		if (strcmp(tok, "push") == 0)
+		{
+			tok = strtok(NULL, " ");
+			int num = atoi(tok);
+			Q.push(num);
+		}
+		else if (strcmp(tok, "pop") == 0)
+			Q.pop();
+		else if (strcmp(tok, "size") == 0)
+			Q.size();
+		else if (strcmp(tok, "empty") == 0)
+			Q.empty();
+		else if (strcmp(tok, "front") == 0)
+			Q.front();
+		else if (strcmp(tok, "back") == 0)
+			Q.back();
+	}
+
+	return 0;
+}
