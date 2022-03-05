@@ -1,0 +1,93 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <string>
+#include <cstring>
+using namespace std;
+
+class stack
+{
+private:
+	int Top;
+	int* Stack;
+public:
+	stack() { Top = 0; Stack = new int[50]; }
+	~stack() { delete Stack; }
+
+	void push(int X);
+	void pop();
+	void size();
+	void empty();
+	void top();
+};
+
+void stack::push(int X)
+{
+	Stack[++Top] = X;
+}
+
+void stack::pop()
+{
+	if (Top == 0)
+		cout << "-1" << endl;
+	else
+	{
+		cout << Stack[Top] << endl;
+		Stack[Top--] = NULL;
+	}
+}
+
+void stack::size()
+{
+	cout << Top << endl;
+}
+
+void stack::empty()
+{
+	if (Top == 0)
+		cout << "1" << endl;
+	else
+		cout << "0" << endl;
+}
+
+void stack::top()
+{
+	if (Top == 0)
+		cout << "-1" << endl;
+	else
+		cout << Stack[Top] << endl;
+}
+
+int main(void)
+{
+	stack S;
+	
+	int N;
+	cin >> N;
+	cin.ignore();
+
+	for (int i = 0; i < N; i++)
+	{
+		string cmd;
+		getline(cin, cmd);
+		char* cmd_char = new char[cmd.size()];
+		strcpy(cmd_char, cmd.c_str());
+		char* tok = strtok(cmd_char, " ");
+
+		if (strcmp(tok, "push") == 0)
+		{
+			tok = strtok(NULL, " ");
+			int num = atoi(tok);
+			S.push(num);
+		}
+		else if (strcmp(tok, "pop") == 0)
+			S.pop();
+		else if (strcmp(tok, "size") == 0)
+			S.size();
+		else if (strcmp(tok, "empty") == 0)
+			S.empty();
+		else if (strcmp(tok, "top") == 0)
+			S.top();
+	}
+	
+	return 0;
+}
