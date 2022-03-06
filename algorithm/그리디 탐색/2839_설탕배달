@@ -1,0 +1,27 @@
+#include <iostream>
+using namespace std;
+
+int main(void)
+{
+	int n;
+	cin >> n;
+
+	int num = 5001;
+	for (int a = n / 3; a > -1; a--)
+	{
+		for (int b = 0; b < (n / 5) + 1; b++)
+		{
+			if (((3 * a) + (5 * b)) == n)
+			{
+				if (num > a + b)
+					num = a + b;
+			}
+		}
+	}
+	if (num == 5001)
+		cout << -1 << endl;
+	else
+		cout << num << endl;
+
+	return 0;
+}
