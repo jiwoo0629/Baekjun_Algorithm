@@ -1,0 +1,126 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main(void)
+{
+	int m, n;
+	cin >> m >> n;
+	cin.ignore();
+
+	int date = 0; //다 익을 때까지 걸리는 최소 일수를 count하기 위한 변수
+	//동적 할당
+	int** box = new int* [n];
+	for (int i = 0; i < n; i++)
+		box[i] = new int[m];
+
+	queue<pair<int, int>> tomato; //tomato가 익어있는 위치 확인
+	pair<int, int> p_box;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			cin >> box[i][j];
+			if (box[i][j] == 1)
+				tomato.push(make_pair(i, j));
+		}
+	}
+
+	int num = tomato.size();
+	while (!tomato.empty())
+	{
+		if (num == 0)
+		{
+			num = tomato.size();
+			date++;
+		}
+		p_box = tomato.front();
+		tomato.pop();
+		if (p_box.first == 0) //익은 토마토가 윗 벽에 붙어있을 경우
+		{
+			if (box[p_box.first + 1][p_box.second] == 0)
+			{
+				tomato.push(make_pair(p_box.first + 1, p_box.second));
+				box[p_box.first + 1][p_box.second] = 1;
+			}
+		}
+		else if (p_box.first == n - 1) //익은 토마토가 아랫 벽에 붙어있을 경우
+		{
+			if (box[p_box.first - 1][p_box.second] == 0)
+			{
+				tomato.push(make_pair(p_box.first - 1, p_box.second));
+				box[p_box.first - 1][p_box.second] = 1;
+			}
+		}
+		else //익은 토마토가 그 사이에 있을 경우
+		{
+			if (box[p_box.first + 1][p_box.second] == 0)
+			{
+				tomato.push(make_pair(p_box.first + 1, p_box.second));
+				box[p_box.first + 1][p_box.second] = 1;
+			}
+			if (box[p_box.first - 1][p_box.second] == 0)
+			{
+				tomato.push(make_pair(p_box.first - 1, p_box.second));
+				box[p_box.first - 1][p_box.second] = 1;
+			}
+		}
+
+		if (p_box.second == 0) //익은 토마토가 왼쪽 벽에 붙어있을 경우
+		{
+			if (box[p_box.first][p_box.second + 1] == 0)
+			{
+				tomato.push(make_pair(p_box.first, p_box.second + 1));
+				box[p_box.first][p_box.second + 1] = 1;
+			}
+		}
+		else if (p_box.second == m - 1) //익은 토마토가 오른쪽 벽에 붙어있을 경우
+		{
+			if (box[p_box.first][p_box.second - 1] == 0)
+			{
+				tomato.push(make_pair(p_box.first, p_box.second - 1));
+				box[p_box.first][p_box.second - 1] = 1;
+			}
+		}
+		else //익은 토마토가 그 사이에 있을 경우
+		{
+			if (box[p_box.first][p_box.second + 1] == 0)
+			{
+				tomato.push(make_pair(p_box.first, p_box.second + 1));
+				box[p_box.first][p_box.second + 1] = 1;
+			}
+			if (box[p_box.first][p_box.second - 1] == 0)
+			{
+				tomato.push(make_pair(p_box.first, p_box.second - 1));
+				box[p_box.first][p_box.second - 1] = 1;
+			}
+		}
+		num--;
+	}
+
+	int raw = 0; //토마토가 모두 익을 수 있는지 없는지에 대한 변수
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			if (box[i][j] == 0)
+			{
+				cout << "-1" << endl;
+				raw = 1;
+			}		
+		}
+	}
+	if(raw != 1)
+		cout << date << endl;
+
+	//동적 할당 해제
+	for (int i = 0; i < n; i++)
+		delete[] box[i];
+	delete[] box;
+
+	return 0;
+}
