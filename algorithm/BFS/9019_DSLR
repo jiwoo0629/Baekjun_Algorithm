@@ -1,9 +1,10 @@
 #include <iostream>
 using namespace std;
 
-string check(int, int, int, int, int, int, int, int); //초기 값을 회전시켜 최종 값으로 만들 수 있는지 확인하는 함수
+string check(int, int); //초기 값을 회전시켜 최종 값으로 만들 수 있는지 확인하는 함수
 string divide(int, int); //계속 2배를 했을 때 값이 나오는지 확인
 string sub(int, int); //1씩 뺐을 때 값이 나오는지 확인
+string divide_sub(int, int); //계속 2배를 하다가 1씩 뺐을 때 값이 나올 때의 명령어 얻기
 
 int main(void)
 {
@@ -18,25 +19,50 @@ int main(void)
 		cin >> first >> second;
 		string str;
 
-		int first_d1 = first / 1000;
-		int first_d2 = (first - first_d1 * 1000) / 100;
-		int first_d3 = (first - first_d1 * 1000 - first_d2 * 100) / 10;
-		int first_d4 = first - first_d1 * 1000 - first_d2 * 100 - first_d3 * 10;
-		int second_d1 = second / 1000;
-		int second_d2 = (second - second_d1 * 1000) / 100;
-		int second_d3 = (second - second_d1 * 1000 - second_d2 * 100) / 10;
-		int second_d4 = second - second_d1 * 1000 - second_d2 * 100 - second_d3 * 10;
-
-		if (check(first_d1, first_d2, first_d3, first_d4, second_d1, second_d2, second_d3, second_d4) != "")
-			str = check(first_d1, first_d2, first_d3, first_d4, second_d1, second_d2, second_d3, second_d4);
-		else if (divide(first, second) == "")
-			str = sub(first, second);
+		if (check(first, second) != "")
+			str = check(first, second);
 		else
 		{
-			if (divide(first, second).length() <= sub(first, second).length())
-				str = divide(first, second);
-			else
-				str = sub(first, second);
+			int case1 = divide(first, second).length();
+			int case2 = sub(first, second).length();
+			int case3 = divide_sub(first, second).length();
+			
+			if (case1 < case2 && case1 < case3)
+			{
+				if(case1 > 0)
+					str = divide(first, second);
+				else
+				{
+					if (0 < case2 && case2 < case3)
+						str = sub(first, second);
+					else if (0 < case3 && case3 < case2)
+						str = divide_sub(first, second);
+				}
+			}
+			else if (case2 < case1 && case2 < case3)
+			{
+				if (case2 > 0)
+					str = sub(first, second);
+				else
+				{
+					if (0 < case1 && case1 < case3)
+						str = divide(first, second);
+					else if (0 < case3 && case3 < case1)
+						str = divide_sub(first, second);
+				}
+			}
+			else if (case3 < case1 && case3 < case2)
+			{
+				if (case3 > 0)
+					str = divide_sub(first, second);
+				else
+				{
+					if (0 < case1 && case1 < case2)
+						str = divide(first, second);
+					else if (0 < case2 && case2 < case1)
+						str = sub(first, second);
+				}
+			}
 		}
 		cmd[i] = str;
 	}
@@ -47,21 +73,30 @@ int main(void)
 	return 0;
 }
 
-string check(int f1, int f2, int f3, int f4, int s1, int s2, int s3, int s4)
+string check(int first, int second)
 {
-	int first[4] = { f1, f2, f3, f4 };
-	int second[4] = { s1, s2, s3, s4 };
+	int f1 = first / 1000;
+	int f2 = (first - f1 * 1000) / 100;
+	int f3 = (first - f1 * 1000 - f2 * 100) / 10;
+	int f4 = first - f1 * 1000 - f2 * 100 - f3 * 10;
+	int s1 = second / 1000;
+	int s2 = (second - s1 * 1000) / 100;
+	int s3 = (second - s1 * 1000 - s2 * 100) / 10;
+	int s4 = second - s1 * 1000 - s2 * 100 - s3 * 10;
+	
+	int firstarr[4] = { f1, f2, f3, f4 };
+	int secondarr[4] = { s1, s2, s3, s4 };
 	string str;
 
 	for (int i = 0; i < 4; i++)
 	{
-		int temp = first[0];
-		first[0] = first[3];
-		first[3] = first[2];
-		first[2] = first[1];
-		first[1] = temp;
+		int temp = firstarr[0];
+		firstarr[0] = firstarr[3];
+		firstarr[3] = firstarr[2];
+		firstarr[2] = firstarr[1];
+		firstarr[1] = temp;
 		str += "R";
-		if (first[0] == second[0] && first[1] == second[1] && first[2] == second[2] && first[3] == second[3])
+		if (firstarr[0] == secondarr[0] && firstarr[1] == secondarr[1] && firstarr[2] == secondarr[2] && firstarr[3] == secondarr[3])
 		{
 			if (i == 2)
 				str = "L";
@@ -76,25 +111,43 @@ string divide(int first, int second)
 	string str;
 	if (second % 2 == 1)
 		return "";
-	while (1)
+	while (first != second || first % 10000 != second)
 	{
 		first *= 2;
 		str += "D";
-		if (first == second || first % 10000 == second)
-			return str;
 	}
+	return str;
 }
 
 string sub(int first, int second)
 {
 	string str;
-	while (1)
+	while (first != second)
 	{
 		if (first == 0)
 			first = 10000;
-		first -= 1;
+		first--;
 		str += "S";
-		if (first == second)
-			return str;
 	}
+	return str;
+}
+
+string divide_sub(int first, int second)
+{
+	string str;
+	while (first * 2 < second && (first * 2) % 10000 < second)
+	{
+		first *= 2;
+		str += "D";
+	}
+	first *= 2;
+	str += "D";
+	while (first != second)
+	{
+		if (first == 0)
+			first = 10000;
+		first--;
+		str += "S";
+	}
+	return str;
 }
