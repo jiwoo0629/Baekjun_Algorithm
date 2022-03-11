@@ -1,0 +1,100 @@
+#include <iostream>
+using namespace std;
+
+string check(int, int, int, int, int, int, int, int); //초기 값을 회전시켜 최종 값으로 만들 수 있는지 확인하는 함수
+string divide(int, int); //계속 2배를 했을 때 값이 나오는지 확인
+string sub(int, int); //1씩 뺐을 때 값이 나오는지 확인
+
+int main(void)
+{
+	int test;
+	cin >> test;
+	cin.ignore();
+	string* cmd = new string[test];
+
+	for (int i = 0; i < test; i++)
+	{
+		int first, second;
+		cin >> first >> second;
+		string str;
+
+		int first_d1 = first / 1000;
+		int first_d2 = (first - first_d1 * 1000) / 100;
+		int first_d3 = (first - first_d1 * 1000 - first_d2 * 100) / 10;
+		int first_d4 = first - first_d1 * 1000 - first_d2 * 100 - first_d3 * 10;
+		int second_d1 = second / 1000;
+		int second_d2 = (second - second_d1 * 1000) / 100;
+		int second_d3 = (second - second_d1 * 1000 - second_d2 * 100) / 10;
+		int second_d4 = second - second_d1 * 1000 - second_d2 * 100 - second_d3 * 10;
+
+		if (check(first_d1, first_d2, first_d3, first_d4, second_d1, second_d2, second_d3, second_d4) != "")
+			str = check(first_d1, first_d2, first_d3, first_d4, second_d1, second_d2, second_d3, second_d4);
+		else if (divide(first, second) == "")
+			str = sub(first, second);
+		else
+		{
+			if (divide(first, second).length() <= sub(first, second).length())
+				str = divide(first, second);
+			else
+				str = sub(first, second);
+		}
+		cmd[i] = str;
+	}
+	for (int i = 0; i < test; i++)
+		cout << cmd[i] << endl;
+
+	delete[]cmd;
+	return 0;
+}
+
+string check(int f1, int f2, int f3, int f4, int s1, int s2, int s3, int s4)
+{
+	int first[4] = { f1, f2, f3, f4 };
+	int second[4] = { s1, s2, s3, s4 };
+	string str;
+
+	for (int i = 0; i < 4; i++)
+	{
+		int temp = first[0];
+		first[0] = first[3];
+		first[3] = first[2];
+		first[2] = first[1];
+		first[1] = temp;
+		str += "R";
+		if (first[0] == second[0] && first[1] == second[1] && first[2] == second[2] && first[3] == second[3])
+		{
+			if (i == 2)
+				str = "L";
+			return str;
+		}
+	}
+	return "";
+}
+
+string divide(int first, int second)
+{
+	string str;
+	if (second % 2 == 1)
+		return "";
+	while (1)
+	{
+		first *= 2;
+		str += "D";
+		if (first == second || first % 10000 == second)
+			return str;
+	}
+}
+
+string sub(int first, int second)
+{
+	string str;
+	while (1)
+	{
+		if (first == 0)
+			first = 10000;
+		first -= 1;
+		str += "S";
+		if (first == second)
+			return str;
+	}
+}
