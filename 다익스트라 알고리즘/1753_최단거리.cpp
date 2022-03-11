@@ -56,5 +56,7 @@ int main(void)
 			cout << d[i+1] << endl;
 	}
 
+	delete []a;
+	delete []d;
 	return 0;
 }
