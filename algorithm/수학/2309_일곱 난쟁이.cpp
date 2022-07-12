@@ -15,7 +15,7 @@ int main(void)
 	int sub = sumfor9 - 100;
 	vector<int> height7;
 	//임의의 2명의 난쟁이의 키의 합이 sub이 되는 경우를 찾는다.
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		for (int j = i + 1; j < 9; j++)
 		{
@@ -26,7 +26,6 @@ int main(void)
 					if(k != i && k != j)
 						height7.push_back(height[k]);
 				}
-				continue;
 			}
 		}
 	}
