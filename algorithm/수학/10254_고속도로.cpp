@@ -3,6 +3,28 @@
 #include <cmath>
 using namespace std;
 
+/*dfs 백트래킹
+vector<pair<int, int>> result;
+vector<pair<int, int>> v;
+bool* visit;
+void dfs(int idx) {
+	if (result.size() == 2) {
+		for (pair<int, int> i : result) {
+			
+		}
+		return;
+	}
+	for (int i = idx; i < v.size(); i++) {
+		if (!visit[i]) {
+			visit[i] = true;
+			result.push_back(v[i]);
+			dfs(i + 1);
+			result.pop_back();
+			visit[i] = false;
+		}
+	}
+}*/
+
 int main(void)
 {
 	int t;
