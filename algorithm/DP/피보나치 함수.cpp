@@ -22,7 +22,6 @@ int main(void) {
         cin >> n;
         cout << fibo[n][0] << " " << fibo[n][1] << "\n";
     }
-
     
     return 0;
 }
