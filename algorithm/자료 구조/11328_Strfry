@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(void)
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    int n;
+    cin >> n;
+
+    while(n--) {    
+        int arr[26] = {0, };
+        string str1, str2;
+        cin >> str1 >> str2;
+
+        for(auto c : str1) arr[c - 'a']++;
+        for(auto c : str2) arr[c - 'a']--;
+
+        bool pos = true;
+        for(int i : arr) if(i != 0) pos = false;
+
+        if(pos) cout << "Possible\n";
+        else cout << "Impossible\n";
+    }
+
+    return 0;
+}
