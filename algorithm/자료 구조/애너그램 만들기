@@ -1,0 +1,26 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(void)
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    int arr1[26] = {0, }, arr2[26] = {0, };
+    string str1, str2;
+    cin >> str1 >> str2;
+
+    for(auto c : str1) arr1[c - 'a']++;
+    for(auto c : str2) {
+        if(arr1[c - 'a'] > 0) arr1[c - 'a']--;
+        else arr2[c - 'a']++;
+    }
+    int c = 0;
+    for(auto i : arr1) c += i;
+    for(auto i : arr2) c += i;
+
+    cout << c;
+
+    return 0;
+}
