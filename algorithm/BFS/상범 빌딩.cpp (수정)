@@ -20,12 +20,6 @@ int main(void)
         cin >> l >> r >> c;
         if(l == 0 && r == 0 && c == 0)
             return 0;
-        for(int i=0; i<l; i++) {
-            for(int j=0; j<r; j++) {
-                fill(sangbum[i][j], sangbum[i][j]+c, 0);
-                fill(vis[i][j], vis[i][j] + c, false);
-            }
-        }
         queue<tuple<int, int, int>> q;
         int exit_x, exit_y, exit_z;
         for(int i=0; i<l; i++) {
@@ -63,8 +57,15 @@ int main(void)
                 step[nx][ny][nz] = step[get<0>(cur)][get<1>(cur)][get<2>(cur)] + 1;
             }   
         }
-        if(!vis[exit_x][exit_y][exit_z]) cout << "Trapped!\n";
+        if(step[exit_x][exit_y][exit_z] == 0) cout << "Trapped!\n";
         else cout << "Escaped in " << step[exit_x][exit_y][exit_z] << " minute(s).\n";
+        for(int i=0; i<l; i++) {
+            for(int j=0; j<r; j++) {
+                fill(sangbum[i][j], sangbum[i][j]+c, 0);
+                fill(step[i][j], step[i][j] + c, 0);
+                fill(vis[i][j], vis[i][j] + c, false);
+            }
+        }
     }
 
     return 0;
