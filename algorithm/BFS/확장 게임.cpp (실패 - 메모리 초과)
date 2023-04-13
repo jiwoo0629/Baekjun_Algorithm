@@ -1,0 +1,81 @@
+#include <iostream>
+#include <queue>
+#include <tuple>
+using namespace std;
+
+int n, m, p;
+int dot = 0;
+long long step[10];
+int result[10];
+char board[1005][1005];
+bool vis[1005][1005];
+int dx[4] = {-1, 0, 1, 0};
+int dy[4] = {0, -1, 0, 1};
+
+int main(void)
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> n >> m >> p;
+    for(int i=1; i<=p; i++) cin >> step[i];
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<m; j++) {
+            cin >> board[i][j];
+            if(board[i][j] == '.') dot++;
+        }
+    }
+    while(1) {
+        bool extend = false;
+        for(int player = 1; player <= p; player++) {
+            queue<tuple<int, int, int>> q;
+            for(int i=0; i<n; i++) {
+                for(int j=0; j<m; j++) {
+                    if(!vis[i][j] && board[i][j] == (char)(player + '0')) {
+                        q.push({player, i, j});
+                        vis[i][j] = true;
+                    }
+                }
+            }    
+            while(!q.empty()) {
+                int pl, y, x;
+                tie(pl, y, x) = q.front();
+                q.pop();
+                long long time = step[player];
+                if(time >= max(n-y, m-x)) time = max(n-y, m-x);
+                queue<tuple<int, int, long long>> nq;
+                nq.push({y, x, 0});
+                while(!nq.empty()) {
+                    int nexty, nextx;
+                    long long count;
+                    tie(nexty, nextx, count) = nq.front();
+                    nq.pop();
+                    if(count == time) continue;
+                    for(int k = 0; k < 4; k++) {
+                        int ny = nexty + dy[k];
+                        int nx = nextx + dx[k]; 
+                        if(ny < 0 || ny >= n || nx < 0 || nx >= m) continue;
+                        if(vis[ny][nx]) continue;
+                        if(board[ny][nx] != (char)(player + '0') && (board[ny][nx] >= '1' && board[ny][nx] <= '9')) continue;
+                        if(board[ny][nx] == '.') dot--;
+                        board[ny][nx] = (char)(player + '0');
+                        nq.push({ny, nx, count+1});
+                        extend = true;
+                    }
+                }
+            }
+            if (dot == 0) break;
+        }
+        if(!extend) break;
+    }
+
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<m; j++) {
+            if(board[i][j] == '#') continue;
+            else result[board[i][j] - '0']++;
+        }
+    }
+    for(int i=1; i<=p; i++) cout << result[i] << " ";
+   
+    return 0;
+}
