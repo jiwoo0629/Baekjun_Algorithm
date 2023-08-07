@@ -1,0 +1,29 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int n;
+int a[4002], b[4002], c[4002], d[4002]; //배열에 들어있는 정수의 최댓값
+int sum_cd[16000004];
+
+//16000000 * log(16000000)
+
+int main(void) {
+    cin >> n;
+    for(int i=0; i<n; i++) 
+        cin >> a[i] >> b[i] >> c[i] >> d[i];
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<n; j++) 
+            sum_cd[i * n + j] = c[i] + d[j];
+    }
+    sort(sum_cd, sum_cd+n*n);
+    long long answer = 0;
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<n; j++) {
+            answer += upper_bound(sum_cd, sum_cd+n*n, -a[i]-b[j]) - lower_bound(sum_cd, sum_cd+n*n, -a[i]-b[j]);
+        }
+    }
+    cout << answer;
+
+    return 0;
+}
