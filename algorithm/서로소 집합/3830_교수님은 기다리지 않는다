@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+/*
+샘플의 무게를 채서 무게의 차이를 잼
+지금까지 내용을 바탕으로 두 샘플의 차이를 구할 수 있는지 없는지를 알아내는 프로그램
+*/
+
+int n, m; //n : 샘플 (~10만), m : 한 일의 수 (~10만)
+int a, b, w; //a < b, w : b-a, (0 ~ 100만)
+char op;
+long long parent[100005], sum[100005]; //조상노드, 자신의 조상노드와 자신과의 무게차이
+
+long long find(long long k) {
+	if (parent[k] == k) return k;
+	else {
+		long long tmp = find(parent[k]); //먼저 조상노드를 찾음
+		sum[k] += sum[parent[k]]; //합을 같이 더해줌
+		return parent[k] = tmp;
+	}
+}
+
+void union_(int a, int b, int w) {
+	int root_a = find(a);
+	int root_b = find(b);
+	if (root_a != root_b) { //두 조상노드가 같을 경우, 업데이트 해줄 필요 없음
+		sum[root_b] = sum[a] - sum[b] + w;
+		parent[root_b] = root_a;
+	}
+}
+
+int main(void) {
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	//n = 100000이니까 dfs는 시간초과 => dp 이용
+	while (1) { //입력으로 0 0이 주어지면 종료
+		cin >> n >> m;
+		if (n == 0 && m == 0) break;
+		for (int i = 1; i <= n; i++) {
+			parent[i] = i;
+			sum[i] = 0;
+		}
+
+		while (m--) {
+			cin >> op >> a >> b;
+			if (op == '!') {
+				cin >> w;
+				union_(a, b, w);
+			}
+			else if (op == '?') {
+				//대답할 수 있으면, 그 차이를 입력, 대답할 수 없으면, UNKNOWN 출력
+				if (find(a) != find(b))  //두 값이 같은 조상으로 연결되지 않는 경우
+					cout << "UNKNOWN\n";
+				else {
+					if (abs(sum[b] - sum[a]) > 1000000) cout << "UNKNOWN\n";
+					else cout << sum[b] - sum[a] << "\n";
+				}
+			}
+		}
+	}
+
+	return 0;
+}
